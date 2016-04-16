@@ -1,12 +1,11 @@
 package fr.fbb.divisr;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.fbb.divisr.screens.MainMenuScreen;
 
-public class Divisr extends Game {
-
+public class Divisr extends MultiScreenGame
+{
 	public SpriteBatch batch;
 	public BitmapFont font;
 

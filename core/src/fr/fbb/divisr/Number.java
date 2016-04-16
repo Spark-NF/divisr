@@ -1,14 +1,15 @@
 package fr.fbb.divisr;
 
-import java.awt.*;
+import com.badlogic.gdx.graphics.Color;
 
 public class Number
 {
-    private Color color;
-    public int content;
+	private Color color;
+	private int content;
 
-    public Number(Color color, int content) {
-        this.color = color;
-        this.content = content;
-    }
+	public Number(Color color, int content)
+	{
+		this.color = color;
+		this.content = content;
+	}
 }
