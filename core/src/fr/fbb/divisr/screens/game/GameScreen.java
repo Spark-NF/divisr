@@ -24,7 +24,6 @@ public class GameScreen implements Screen
 	private Rectangle bucket;
 	private Array<Rectangle> numbers;
 	private long lastDropTime;
-	private int lines = 5;
 	private boolean running = true;
 
 	public GameScreen(final Divisr game)
@@ -50,7 +49,7 @@ public class GameScreen implements Screen
 	@Override
 	public void draw()
 	{
-		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+		Gdx.gl.glClearColor(0.1f, 0.2f, 0.5f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		camera.update();
@@ -58,12 +57,6 @@ public class GameScreen implements Screen
 		game.batch.begin();
 
 		game.batch.draw(bucketImage, bucket.x, bucket.y);
-
-		// Columns
-		for (int i = 0; i < lines; ++i)
-		{
-			//game.batch.draw(dropImage, raindrop.x, raindrop.y);
-		}
 
 		// Numbers
 		for (Rectangle number: numbers)
@@ -89,7 +82,7 @@ public class GameScreen implements Screen
 
 			if (touchPos.x < 50 && touchPos.y < 50)
 			{
-				pause();
+				pauseGame();
 				return;
 			}
 
@@ -139,6 +132,22 @@ public class GameScreen implements Screen
 		lastDropTime = TimeUtils.nanoTime();
 	}
 
+	private void pauseGame()
+	{
+		if (running)
+		{
+			game.addScreen(new PauseScreen(game));
+		}
+	}
+
+	private void resumeGame()
+	{
+		if (!running)
+		{
+			game.popScreen();
+		}
+	}
+
 	@Override
 	public void dispose()
 	{
@@ -148,37 +157,25 @@ public class GameScreen implements Screen
 
 	@Override
 	public void show()
-	{
-
-	}
+	{ }
 
 	@Override
 	public void resize(int width, int height)
-	{
-
-	}
+	{ }
 
 	@Override
 	public void pause()
 	{
-		if (running)
-		{
-			game.addScreen(new PauseScreen(game));
-		}
+		pauseGame();
 	}
 
 	@Override
 	public void resume()
 	{
-		if (!running)
-		{
-			game.popScreen();
-		}
+		resumeGame();
 	}
 
 	@Override
 	public void hide()
-	{
-
-	}
+	{ }
 }
