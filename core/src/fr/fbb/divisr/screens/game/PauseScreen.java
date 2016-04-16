@@ -49,14 +49,13 @@ public class PauseScreen implements Screen
 	public void update(float delta)
 	{
 		// Resume by touch
-		if (Gdx.input.isTouched())
+		if (Gdx.input.justTouched())
 		{
 			Vector3 touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			camera.unproject(touchPos);
 
-			if (touchPos.x > 50)
-				game.popScreen();
+			game.popScreen();
 		}
 	}
 

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import fr.fbb.divisr.Divisr;
+import fr.fbb.divisr.objects.Game;
 import fr.fbb.divisr.screens.game.GameScreen;
 
 public class MainMenuScreen implements Screen
@@ -39,7 +40,7 @@ public class MainMenuScreen implements Screen
 	{
 		if (Gdx.input.isTouched())
 		{
-			game.setScreen(new GameScreen(game));
+			game.setScreen(new GameScreen(game, 5, Game.Difficulty.Medium));
 			dispose();
 		}
 	}

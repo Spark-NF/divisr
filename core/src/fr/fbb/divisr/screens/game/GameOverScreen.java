@@ -1,32 +1,70 @@
 package fr.fbb.divisr.screens.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector3;
 import fr.fbb.divisr.Divisr;
+import fr.fbb.divisr.objects.Game;
 import fr.fbb.divisr.screens.Screen;
 
 public class GameOverScreen implements Screen
 {
 	private final Divisr game;
+	private OrthographicCamera camera;
+	private Game lostGame;
 
-	public GameOverScreen(final Divisr game)
+	public GameOverScreen(final Divisr game, Game lostGame)
 	{
 		this.game = game;
-	}
+		this.lostGame = lostGame;
 
-	@Override
-	public void show()
-	{ }
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, 360, 640);
+	}
 
 	@Override
 	public void draw()
 	{
+		// Dark background
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		ShapeRenderer sr = new ShapeRenderer();
+		sr.setProjectionMatrix(camera.combined);
+		sr.begin(ShapeRenderer.ShapeType.Filled);
+		sr.setColor(new Color(0, 0, 0, 0.5f));
+		sr.rect(0, 0, 360, 640);
+		sr.end();
+		Gdx.gl.glDisable(GL20.GL_BLEND);
 
+		camera.update();
+		game.batch.setProjectionMatrix(camera.combined);
+
+		game.batch.begin();
+		game.font.draw(game.batch, "Game over", 100, 150);
+		game.font.draw(game.batch, "Tap anywhere to start a new game", 100, 100);
+		game.batch.end();
 	}
 
 	@Override
 	public void update(float delta)
 	{
+		// New game by touch
+		if (Gdx.input.justTouched())
+		{
+			Vector3 touchPos = new Vector3();
+			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+			camera.unproject(touchPos);
 
+			game.setScreen(new GameScreen(game, lostGame.columns, lostGame.difficulty));
+		}
 	}
+
+	@Override
+	public void show()
+	{ }
 
 	@Override
 	public void resize(int width, int height)

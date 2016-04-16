@@ -20,6 +20,7 @@ public abstract class MultiScreenGame implements ApplicationListener
 	{
 		for (Screen screen : screens)
 		{
+			screen.hide();
 			screen.dispose();
 		}
 		screens.clear();
@@ -28,18 +29,18 @@ public abstract class MultiScreenGame implements ApplicationListener
 	@Override
 	public void pause()
 	{
-		for (Screen screen : screens)
+		for (int i = 0; i < screens.size(); ++i)
 		{
-			screen.pause();
+			screens.get(i).pause();
 		}
 	}
 
 	@Override
 	public void resume()
 	{
-		for (Screen screen : screens)
+		for (int i = 0; i < screens.size(); ++i)
 		{
-			screen.resume();
+			screens.get(i).resume();
 		}
 	}
 
@@ -67,6 +68,7 @@ public abstract class MultiScreenGame implements ApplicationListener
 		for (Screen screen : screens)
 		{
 			screen.hide();
+			screen.dispose();
 		}
 
 		screens.clear();

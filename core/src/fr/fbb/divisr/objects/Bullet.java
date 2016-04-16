@@ -1,20 +1,17 @@
 package fr.fbb.divisr.objects;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class Number extends GameObject
+public class Bullet extends GameObject
 {
-	private int value;
+	public int value;
 	private BitmapFont font;
-	private Color color;
 
-	public Number(int value, BitmapFont font, Color color)
+	public Bullet(int value, BitmapFont font)
 	{
 		this.value = value;
 		this.font = font;
-		this.color = color;
 
 		position.width = 64;
 		position.height = 64;
@@ -29,11 +26,6 @@ public class Number extends GameObject
 	@Override
 	public void update(float delta)
 	{
-		position.y -= 200 * delta;
-	}
-
-	public boolean divisible(Bullet bullet)
-	{
-		return value % bullet.value == 0;
+		position.y += 200 * delta;
 	}
 }
