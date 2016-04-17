@@ -35,7 +35,7 @@ public class MainMenuScreen implements Screen
 	{
 		if (Gdx.input.isTouched())
 		{
-			game.setScreen(new GameScreen(game, 5, Game.Difficulty.Medium));
+			game.setScreen(new GameScreen(game, 4, Game.Difficulty.Medium));
 			dispose();
 		}
 	}

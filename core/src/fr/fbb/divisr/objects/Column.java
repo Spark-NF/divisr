@@ -24,7 +24,7 @@ public class Column extends GameObject
 
 	public void addNumber(Number number)
 	{
-		number.position.x = this.position.x;
+		number.position.x = this.position.x + this.position.width / 2 - number.position.width / 2;
 		number.position.y = this.position.y + this.position.height;
 
 		numbers.add(number);
@@ -32,8 +32,8 @@ public class Column extends GameObject
 
 	public void addBullet(Bullet bullet)
 	{
-		bullet.position.x = this.position.x;
-		bullet.position.y = this.position.y;
+		bullet.position.x = this.position.x + this.position.width / 2 - bullet.position.width / 2;
+		bullet.position.y = this.position.y + bullet.position.height;
 
 		bullets.add(bullet);
 	}
@@ -80,7 +80,7 @@ public class Column extends GameObject
 			number.update(delta);
 
 			// Remove off screen numbers
-			if (number.position.y + 64 < position.y)
+			if (number.position.y - number.position.height < position.y)
 			{
 				it.remove();
 
