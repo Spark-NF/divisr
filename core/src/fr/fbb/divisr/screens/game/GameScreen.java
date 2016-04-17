@@ -171,7 +171,7 @@ public class GameScreen implements Screen
 	private void spawnNumber()
 	{
 		int index = MathUtils.random(0, columns.size() - 1);
-		columns.get(index).addNumber(new Number(MathUtils.random(1, 9), game.fontNumbers, new Color(0f, 1f, 0f, 1f)));
+		columns.get(index).addNumber(new Number(currentGame.fallingNumber(), game.fontNumbers, new Color(0f, 1f, 0f, 1f)));
 
 		lastSpawn = TimeUtils.nanoTime();
 	}

@@ -33,7 +33,7 @@ public class Column extends GameObject
 	public void addBullet(Bullet bullet)
 	{
 		bullet.position.x = this.position.x + this.position.width / 2 - bullet.position.width / 2;
-		bullet.position.y = this.position.y + bullet.position.height;
+		bullet.position.y = this.position.y + bullet.position.height + 32;
 
 		bullets.add(bullet);
 	}
