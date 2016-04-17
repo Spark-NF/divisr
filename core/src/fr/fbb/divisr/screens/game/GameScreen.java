@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import fr.fbb.divisr.Divisr;
 import fr.fbb.divisr.objects.Bullet;
 import fr.fbb.divisr.objects.Column;
@@ -20,7 +22,9 @@ import java.util.List;
 public class GameScreen implements Screen
 {
 	private final Divisr game;
+	private Viewport viewport;
 	private OrthographicCamera camera;
+
 	private List<Column> columns;
 	private long lastSpawn;
 	private boolean running = true;
@@ -32,17 +36,19 @@ public class GameScreen implements Screen
 		currentGame = new Game(cols, diff);
 
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 360, 640);
+		viewport = new StretchViewport(1080, 1920, camera);
+		viewport.apply();
+		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
 
 		// Columns
 		columns = new ArrayList<Column>();
 		for (int i = 0; i < cols; ++i)
 		{
-			Column col = new Column(new Color(i / cols, 0f, 0f, 1f), 200, currentGame);
-			col.position.x = i * 360 / cols;
-			col.position.y = 0;
-			col.position.width = 360 / cols;
-			col.position.height = 640 - 50;
+			Column col = new Column(200, currentGame);
+			col.position.x = i * viewport.getWorldWidth() / cols;
+			col.position.y = 200;
+			col.position.width = viewport.getWorldWidth() / cols;
+			col.position.height = viewport.getWorldHeight() - 200;
 			columns.add(col);
 		}
 
@@ -70,7 +76,7 @@ public class GameScreen implements Screen
 		int i = 0;
 		for (Integer value : currentGame.incomingValues)
 		{
-			game.font.draw(game.batch, Integer.toString(value), (currentGame.incomingValues.size() - 1 - i) * 30, 20);
+			game.fontNumbers.draw(game.batch, Integer.toString(value), (currentGame.incomingValues.size() - 1 - i) * 60 + 20, 100);
 			++i;
 		}
 
@@ -79,15 +85,15 @@ public class GameScreen implements Screen
 		{
 			if (life < currentGame.lives)
 			{
-				game.font.draw(game.batch, "<3", 360 - life * 30 - 20, 20);
+				game.fontScore.draw(game.batch, "<3", viewport.getWorldWidth() - life * 80 - 80, 80);
 			}
 			else
 			{
-				game.font.draw(game.batch, "--", 360 - life * 30 - 20, 20);
+				game.fontScore.draw(game.batch, "--", viewport.getWorldWidth() - life * 80 - 80, 80);
 			}
 		}
 
-		game.font.draw(game.batch, Integer.toString(currentGame.score), 360 - 20, 640);
+		game.fontScore.draw(game.batch, Integer.toString(currentGame.score), viewport.getWorldWidth() - 50, viewport.getWorldHeight() - 10);
 
 		game.batch.end();
 	}
@@ -106,7 +112,7 @@ public class GameScreen implements Screen
 			camera.unproject(touchPos);
 
 			// Pause button
-			if (touchPos.x < 50 && touchPos.y < 50)
+			if (touchPos.x < 200 && touchPos.y < 200)
 			{
 				pauseGame();
 				return;
@@ -114,8 +120,8 @@ public class GameScreen implements Screen
 
 			// New bullet
 			int value = currentGame.popValue();
-			int index = (int)touchPos.x / (360 / columns.size());
-			columns.get(index).addBullet(new Bullet(value, game.font));
+			int index = (int)(touchPos.x / (viewport.getWorldWidth() / columns.size()));
+			columns.get(index).addBullet(new Bullet(value, game.fontNumbers));
 		}
 
 		// Update columns
@@ -142,7 +148,7 @@ public class GameScreen implements Screen
 	private void spawnNumber()
 	{
 		int index = MathUtils.random(0, columns.size() - 1);
-		columns.get(index).addNumber(new Number(MathUtils.random(1, 9), game.font, new Color(0f, 1f, 0f, 1f)));
+		columns.get(index).addNumber(new Number(MathUtils.random(1, 9), game.fontNumbers, new Color(0f, 1f, 0f, 1f)));
 
 		lastSpawn = TimeUtils.nanoTime();
 	}
@@ -173,7 +179,9 @@ public class GameScreen implements Screen
 
 	@Override
 	public void resize(int width, int height)
-	{ }
+	{
+		viewport.update(width, height);
+	}
 
 	@Override
 	public void pause()

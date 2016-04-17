@@ -3,6 +3,8 @@ package fr.fbb.divisr.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import fr.fbb.divisr.Divisr;
 import fr.fbb.divisr.objects.Game;
 import fr.fbb.divisr.screens.game.GameScreen;
@@ -10,6 +12,7 @@ import fr.fbb.divisr.screens.game.GameScreen;
 public class MainMenuScreen implements Screen
 {
 	private final Divisr game;
+	private Viewport viewport;
 	private OrthographicCamera camera;
 
 	public MainMenuScreen(final Divisr game)
@@ -17,7 +20,9 @@ public class MainMenuScreen implements Screen
 		this.game = game;
 
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 360, 640);
+		viewport = new StretchViewport(1080, 1920, camera);
+		viewport.apply();
+		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
 	}
 
 	@Override
@@ -30,8 +35,8 @@ public class MainMenuScreen implements Screen
 		game.batch.setProjectionMatrix(camera.combined);
 
 		game.batch.begin();
-		game.font.draw(game.batch, "Welcome to Divisr", 100, 150);
-		game.font.draw(game.batch, "Tap anywhere to begin", 100, 100);
+		game.fontMenuTitle.draw(game.batch, "Welcome to Divisr", 100, 1000);
+		game.fontMenuText.draw(game.batch, "Tap anywhere to begin", 100, 800);
 		game.batch.end();
 	}
 

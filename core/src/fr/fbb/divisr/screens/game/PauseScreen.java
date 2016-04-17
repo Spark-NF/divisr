@@ -6,12 +6,15 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import fr.fbb.divisr.Divisr;
 import fr.fbb.divisr.screens.Screen;
 
 public class PauseScreen implements Screen
 {
 	private final Divisr game;
+	private Viewport viewport;
 	private OrthographicCamera camera;
 
 	public PauseScreen(final Divisr game)
@@ -19,7 +22,9 @@ public class PauseScreen implements Screen
 		this.game = game;
 
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 360, 640);
+		viewport = new StretchViewport(1080, 1920, camera);
+		viewport.apply();
+		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
 	}
 
 	@Override
@@ -40,8 +45,8 @@ public class PauseScreen implements Screen
 		game.batch.setProjectionMatrix(camera.combined);
 
 		game.batch.begin();
-		game.font.draw(game.batch, "Gamed paused", 100, 150);
-		game.font.draw(game.batch, "Tap anywhere to resume", 100, 100);
+		game.fontMenuTitle.draw(game.batch, "Gamed paused", 100, 1000);
+		game.fontMenuText.draw(game.batch, "Tap anywhere to resume", 100, 800);
 		game.batch.end();
 	}
 
@@ -51,10 +56,6 @@ public class PauseScreen implements Screen
 		// Resume by touch
 		if (Gdx.input.justTouched())
 		{
-			Vector3 touchPos = new Vector3();
-			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			camera.unproject(touchPos);
-
 			game.popScreen();
 		}
 	}

@@ -9,15 +9,13 @@ import java.util.Queue;
 
 public class Column extends GameObject
 {
-	private Color color;
 	private Queue<Number> numbers;
 	private Queue<Bullet> bullets;
 	private Game game;
 	private float velocity;
 
-	public Column(Color color, float velocity, Game game)
+	public Column(float velocity, Game game)
 	{
-		this.color = color;
 		this.numbers = new LinkedList<Number>();
 		this.bullets = new LinkedList<Bullet>();
 		this.velocity = velocity;
@@ -82,7 +80,8 @@ public class Column extends GameObject
 			number.update(delta);
 
 			// Remove off screen numbers
-			if (number.position.y  + 64 < 0) {
+			if (number.position.y  + 64 < 0)
+			{
 				it.remove();
 
 				game.loseLife();
@@ -97,7 +96,8 @@ public class Column extends GameObject
 			bullet.update(delta);
 
 			// Remove off screen bullets
-			if (bullet.position.y > 640) {
+			if (bullet.position.y > position.y + position.height)
+			{
 				itB.remove();
 			}
 		}
