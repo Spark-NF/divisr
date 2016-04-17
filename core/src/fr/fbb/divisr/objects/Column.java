@@ -80,7 +80,7 @@ public class Column extends GameObject
 			number.update(delta);
 
 			// Remove off screen numbers
-			if (number.position.y  + 64 < 0)
+			if (number.position.y + 64 < position.y)
 			{
 				it.remove();
 

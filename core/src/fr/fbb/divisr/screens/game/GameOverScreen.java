@@ -15,19 +15,12 @@ import fr.fbb.divisr.screens.Screen;
 public class GameOverScreen implements Screen
 {
 	private final Divisr game;
-	private Viewport viewport;
-	private OrthographicCamera camera;
 	private Game lostGame;
 
 	public GameOverScreen(final Divisr game, Game lostGame)
 	{
 		this.game = game;
 		this.lostGame = lostGame;
-
-		camera = new OrthographicCamera();
-		viewport = new StretchViewport(1080, 1920, camera);
-		viewport.apply();
-		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
 	}
 
 	@Override
@@ -37,15 +30,12 @@ public class GameOverScreen implements Screen
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		ShapeRenderer sr = new ShapeRenderer();
-		sr.setProjectionMatrix(camera.combined);
+		sr.setProjectionMatrix(game.camera.combined);
 		sr.begin(ShapeRenderer.ShapeType.Filled);
-		sr.setColor(new Color(0, 0, 0, 0.5f));
-		sr.rect(0, 0, 360, 640);
+		sr.setColor(new Color(0.5f, 0, 0, 0.5f));
+		sr.rect(0, 0, game.viewport.getWorldWidth(), game.viewport.getWorldHeight());
 		sr.end();
 		Gdx.gl.glDisable(GL20.GL_BLEND);
-
-		camera.update();
-		game.batch.setProjectionMatrix(camera.combined);
 
 		game.batch.begin();
 		game.fontMenuTitle.draw(game.batch, "Game over", 100, 1000);

@@ -12,27 +12,17 @@ import fr.fbb.divisr.screens.game.GameScreen;
 public class MainMenuScreen implements Screen
 {
 	private final Divisr game;
-	private Viewport viewport;
-	private OrthographicCamera camera;
 
 	public MainMenuScreen(final Divisr game)
 	{
 		this.game = game;
-
-		camera = new OrthographicCamera();
-		viewport = new StretchViewport(1080, 1920, camera);
-		viewport.apply();
-		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
 	}
 
 	@Override
 	public void draw()
 	{
-		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+		Gdx.gl.glClearColor(0.3f, 0, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		camera.update();
-		game.batch.setProjectionMatrix(camera.combined);
 
 		game.batch.begin();
 		game.fontMenuTitle.draw(game.batch, "Welcome to Divisr", 100, 1000);
