@@ -1,68 +1,66 @@
 package fr.fbb.divisr;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.assets.loaders.SkinLoader;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import fr.fbb.divisr.screens.MainMenuScreen;
-import fr.fbb.divisr.screens.game.PauseScreen;
 
 public class Divisr extends MultiScreenGame
 {
-	public SpriteBatch batch;
-	public Viewport viewport;
-	public OrthographicCamera camera;
-
-	// TODO move this to a proper location
-	public BitmapFont fontNumbers;
-	public BitmapFont fontScore;
-	public BitmapFont fontMenuTitle;
-	public BitmapFont fontMenuText;
+	public AssetManager assetManager;
 
 	public void create()
 	{
-		batch = new SpriteBatch();
-
-		// Load fonts
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/cooper-black.ttf"));
-		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-		parameter.size = 100;
-		fontNumbers = generator.generateFont(parameter);
-		parameter.size = 60;
-		fontScore = generator.generateFont(parameter);
-		parameter.size = 100;
-		fontMenuTitle = generator.generateFont(parameter);
-		parameter.size = 60;
-		fontMenuText = generator.generateFont(parameter);
-		generator.dispose();
+		// Load assets
+		assetManager = new AssetManager();
+		loadAssets(assetManager);
+		assetManager.finishLoading();
 
 		this.setScreen(new MainMenuScreen(this));
-
-		camera = new OrthographicCamera();
-		viewport = new StretchViewport(1080, 1920, camera);
-		viewport.apply(true);
 	}
 
-	@Override
-	public void render()
+	private void loadAssets(AssetManager manager)
 	{
-		camera.update();
-		batch.setProjectionMatrix(camera.combined);
+		// Load UI skin
+		manager.load("skin/uiskin.atlas", TextureAtlas.class);
+		manager.load("skin/uiskin.json", Skin.class, new SkinLoader.SkinParameter("skin/uiskin.atlas"));
 
-		super.render();
+		// Init free-type font loader
+		FileHandleResolver resolver = new InternalFileHandleResolver();
+		manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
+		manager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
+
+		FreeTypeFontLoaderParameter numbersParams = new FreeTypeFontLoaderParameter();
+		numbersParams.fontFileName = "fonts/cooper-black.ttf";
+		numbersParams.fontParameters.size = 100;
+		manager.load("fonts/numbers.ttf", BitmapFont.class, numbersParams);
+
+		FreeTypeFontLoaderParameter scoreParams = new FreeTypeFontLoaderParameter();
+		scoreParams.fontFileName = "fonts/cooper-black.ttf";
+		scoreParams.fontParameters.size = 60;
+		manager.load("fonts/score.ttf", BitmapFont.class, scoreParams);
+
+		FreeTypeFontLoaderParameter titleParams = new FreeTypeFontLoaderParameter();
+		titleParams.fontFileName = "fonts/cooper-black.ttf";
+		titleParams.fontParameters.size = 100;
+		manager.load("fonts/title.ttf", BitmapFont.class, titleParams);
+
+		FreeTypeFontLoaderParameter buttonsParams = new FreeTypeFontLoaderParameter();
+		buttonsParams.fontFileName = "fonts/cooper-black.ttf";
+		buttonsParams.fontParameters.size = 60;
+		manager.load("fonts/buttons.ttf", BitmapFont.class, buttonsParams);
 	}
 
 	public void dispose()
 	{
-		batch.dispose();
-
-		fontNumbers.dispose();
-		fontScore.dispose();
-		fontMenuTitle.dispose();
-		fontMenuText.dispose();
+		assetManager.dispose();
 	}
 }

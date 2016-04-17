@@ -1,66 +1,53 @@
 package fr.fbb.divisr.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.utils.Align;
 import fr.fbb.divisr.Divisr;
-import fr.fbb.divisr.objects.Game;
-import fr.fbb.divisr.screens.game.GameScreen;
 
-public class MainMenuScreen implements Screen
+public class MainMenuScreen extends MenuScreen
 {
-	private final Divisr game;
-
-	public MainMenuScreen(final Divisr game)
+	public MainMenuScreen(Divisr game)
 	{
-		this.game = game;
+		super(game);
 	}
 
 	@Override
-	public void draw()
+	public void buildStage()
 	{
-		Gdx.gl.glClearColor(0.3f, 0, 0.2f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		// Skin
+		Skin skin = game.assetManager.get("skin/uiskin.json", Skin.class);
+		skin.get(TextButton.TextButtonStyle.class).font = game.assetManager.get("fonts/buttons.ttf", BitmapFont.class);
 
-		game.batch.begin();
-		game.fontMenuTitle.draw(game.batch, "Welcome to Divisr", 100, 1000);
-		game.fontMenuText.draw(game.batch, "Tap anywhere to begin", 100, 800);
-		game.batch.end();
+		// Buttons
+		TextButton btnPlay = new TextButton("Play", skin);
+		btnPlay.setSize(600, 200);
+		btnPlay.setPosition(getWidth() / 2, getHeight() / 2 + 120f, Align.center);
+		addActor(btnPlay);
+
+		TextButton btnExit = new TextButton("Exit", skin);
+		btnExit.setSize(600, 200);
+		btnExit.setPosition(getWidth() / 2, getHeight() / 2 - 120f, Align.center);
+		addActor(btnExit);
+
+		// Listeners
+		btnPlay.addListener(new InputListener() {
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				game.setScreen(new LevelMenuScreen(game));
+				return false;
+			}
+		});
+		btnExit.addListener(new InputListener() {
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				Gdx.app.exit();
+				return false;
+			}
+		});
 	}
-
-	@Override
-	public void update(float delta)
-	{
-		if (Gdx.input.isTouched())
-		{
-			game.setScreen(new GameScreen(game, 4, Game.Difficulty.Medium));
-			dispose();
-		}
-	}
-
-	@Override
-	public void show()
-	{ }
-
-	@Override
-	public void resize(int width, int height)
-	{ }
-
-	@Override
-	public void pause()
-	{ }
-
-	@Override
-	public void resume()
-	{ }
-
-	@Override
-	public void hide()
-	{ }
-
-	@Override
-	public void dispose()
-	{ }
 }

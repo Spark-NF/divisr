@@ -44,7 +44,10 @@ public class Game
 
 	public int popValue()
 	{
-		fallingNumbers.remove();
+		if (fallingNumbers.size() > 0)
+		{
+			fallingNumbers.remove();
+		}
 
 		incomingValues.add(MathUtils.random(1, 5));
 		return incomingValues.remove();
