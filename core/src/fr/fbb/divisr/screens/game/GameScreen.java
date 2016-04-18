@@ -21,7 +21,6 @@ import java.util.List;
 
 public class GameScreen extends MenuScreen
 {
-	private List<Column> columns;
 	private long lastSpawn;
 	private boolean running = true;
 	private Texture lifeOn;
@@ -32,26 +31,12 @@ public class GameScreen extends MenuScreen
 	private ShapeRenderer sr;
 	private SpriteBatch batch;
 
-	public GameScreen(final Divisr game, int cols, Game.Difficulty diff)
+	public GameScreen(final Divisr game, Game currentGame)
 	{
 		super(game);
 
-		currentGame = new Game(cols, diff);
 		batch = new SpriteBatch();
-
-		// Columns
-		columns = new ArrayList<Column>();
-		for (int i = 0; i < cols; ++i)
-		{
-			Column col = new Column(200, currentGame);
-			col.position.x = i * getViewport().getWorldWidth() / cols;
-			col.position.y = 315;
-			col.position.width = getViewport().getWorldWidth() / cols;
-			col.position.height = getViewport().getWorldHeight() - col.position.y;
-			columns.add(col);
-		}
-
-		spawnNumber();
+		this.currentGame = currentGame;
 	}
 
 	@Override
@@ -66,6 +51,22 @@ public class GameScreen extends MenuScreen
 		// Textures
 		lifeOn = new Texture(Gdx.files.internal("life-on.png"));
 		lifeOff = new Texture(Gdx.files.internal("life-off.png"));
+
+		// Game
+		ArrayList<Column> columns = new ArrayList<Column>();
+		final int columnNum = currentGame.columnNum;
+		for (int i = 0; i < columnNum; ++i)
+		{
+			Column col = new Column(200, currentGame);
+			col.position.x = i * getViewport().getWorldWidth() / columnNum;
+			col.position.y = 315;
+			col.position.width = getViewport().getWorldWidth() / columnNum;
+			col.position.height = getViewport().getWorldHeight() - col.position.y;
+			columns.add(col);
+		}
+		currentGame.columns = columns;
+
+		spawnNumber();
 	}
 
 	@Override
@@ -91,7 +92,7 @@ public class GameScreen extends MenuScreen
 		sr.rect(0, 300, getViewport().getWorldWidth(), 10);
 
 		// Lanes
-		for (Column col : columns)
+		for (Column col : currentGame.columns)
 		{
 			sr.setColor(new Color(0x2B3997FF));
 			sr.rect(col.position.x + 10, col.position.y, col.position.width - 20, 200);
@@ -105,7 +106,7 @@ public class GameScreen extends MenuScreen
 		batch.begin();
 
 		// Columns
-		for (Column column : columns)
+		for (Column column : currentGame.columns)
 		{
 			column.draw(batch);
 		}
@@ -166,12 +167,12 @@ public class GameScreen extends MenuScreen
 
 			// New bullet
 			int value = currentGame.popValue();
-			int index = (int)(touchPos.x / (getViewport().getWorldWidth() / columns.size()));
-			columns.get(index).addBullet(new Bullet(value, numbersFont));
+			int index = (int)(touchPos.x / (getViewport().getWorldWidth() / currentGame.columns.size()));
+			currentGame.columns.get(index).addBullet(new Bullet(value, numbersFont));
 		}
 
-		// Update columns
-		for (Column column : columns)
+		// Update columnNum
+		for (Column column : currentGame.columns)
 		{
 			column.update(delta);
 		}
@@ -193,8 +194,8 @@ public class GameScreen extends MenuScreen
 
 	private void spawnNumber()
 	{
-		int index = MathUtils.random(0, columns.size() - 1);
-		columns.get(index).addNumber(new Number(currentGame.fallingNumber(), numbersFont, new Color(0f, 1f, 0f, 1f)));
+		int index = MathUtils.random(0, currentGame.columns.size() - 1);
+		currentGame.columns.get(index).addNumber(new Number(currentGame.fallingNumber(), numbersFont, new Color(0f, 1f, 0f, 1f)));
 
 		lastSpawn = TimeUtils.nanoTime();
 	}

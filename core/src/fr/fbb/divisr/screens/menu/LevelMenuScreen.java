@@ -1,7 +1,9 @@
 package fr.fbb.divisr.screens.menu;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -49,20 +51,23 @@ public class LevelMenuScreen extends MenuScreen
 		// Listeners
 		btnEasy.addListener(new ClickListener() {
 			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				game.setScreen(new GameScreen(game, 3, Game.Difficulty.Easy));
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				game.setScreen(new GameScreen(game, new Game(3, Game.Difficulty.Easy)));
+				return false;
 			}
 		});
 		btnMedium.addListener(new ClickListener() {
 			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				game.setScreen(new GameScreen(game, 4, Game.Difficulty.Medium));
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				game.setScreen(new GameScreen(game, new Game(4, Game.Difficulty.Medium)));
+				return false;
 			}
 		});
 		btnHard.addListener(new ClickListener() {
 			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				game.setScreen(new GameScreen(game, 5, Game.Difficulty.Hard));
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				game.setScreen(new GameScreen(game, new Game(5, Game.Difficulty.Hard)));
+				return false;
 			}
 		});
 		btnBack.addListener(new ClickListener() {

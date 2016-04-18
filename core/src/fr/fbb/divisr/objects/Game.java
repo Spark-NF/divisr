@@ -2,8 +2,9 @@ package fr.fbb.divisr.objects;
 
 import com.badlogic.gdx.math.MathUtils;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Queue;
+import java.util.List;
 
 public class Game
 {
@@ -14,17 +15,18 @@ public class Game
 		Hard
 	}
 
-	public Difficulty difficulty;
 	public LinkedList<Integer> incomingValues;
 	private LinkedList<Integer> fallingNumbers;
-	public int columns;
+	public Difficulty difficulty;
+	public int columnNum;
 	public int score;
 	public int lives;
 	public int livesMax;
+	public List<Column> columns;
 
-	public Game(int columns, Difficulty difficulty)
+	public Game(int columnNum, Difficulty difficulty)
 	{
-		this.columns = columns;
+		this.columnNum = columnNum;
 		this.difficulty = difficulty;
 		score = 0;
 

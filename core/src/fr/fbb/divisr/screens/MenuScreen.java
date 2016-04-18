@@ -9,58 +9,62 @@ import fr.fbb.divisr.Divisr;
 
 public abstract class MenuScreen extends Stage implements Screen
 {
-	protected Divisr game;
-	public MenuScreen(final Divisr game)
-	{
-		super(new ExtendViewport(1080, 1920, new OrthographicCamera()));
+    protected Divisr game;
 
-		this.game = game;
-		buildStage();
-	}
+    public MenuScreen(final Divisr game)
+    {
+        super(new ExtendViewport(1080, 1920, new OrthographicCamera()));
 
-	public abstract void buildStage();
+        this.game = game;
+    }
 
-	@Override
-	public void draw()
-	{
-		if (!isOverlay())
-		{
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		}
+    public abstract void buildStage();
 
-		super.draw();
-	}
+    @Override
+    public void draw()
+    {
+        if (!isOverlay())
+        {
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        }
 
-	@Override
-	public void update(float delta)
-	{
-		super.act(delta);
-	}
+        super.draw();
+    }
 
-	@Override
-	public void show()
-	{
-		Gdx.gl.glClearColor(0.3f, 0, 0.2f, 1);
-		Gdx.input.setInputProcessor(this);
-	}
+    @Override
+    public void update(float delta)
+    {
+        super.act(delta);
+    }
 
-	@Override
-	public void resize(int width, int height)
-	{
-		getViewport().update(width, height, true);
-	}
+    @Override
+    public void show()
+    {
+        buildStage();
+        Gdx.gl.glClearColor(0.3f, 0, 0.2f, 1);
+        Gdx.input.setInputProcessor(this);
+    }
 
-	@Override
-	public void hide()
-	{ }
+    @Override
+    public void resize(int width, int height)
+    {
+        getViewport().update(width, height, true);
+    }
 
-	@Override
-	public void pause()
-	{ }
+    @Override
+    public void hide()
+    {
+    }
 
-	@Override
-	public void resume()
-	{ }
+    @Override
+    public void pause()
+    {
+    }
+
+    @Override
+    public void resume()
+    {
+    }
 
 	@Override
 	public boolean isOverlay()
