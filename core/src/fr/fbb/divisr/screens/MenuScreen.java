@@ -41,6 +41,7 @@ public abstract class MenuScreen extends Stage implements Screen
     public void show()
     {
         buildStage();
+
         Gdx.gl.glClearColor(0.3f, 0, 0.2f, 1);
         Gdx.input.setInputProcessor(this);
     }
