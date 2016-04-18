@@ -44,9 +44,9 @@ public class GameScreen implements Screen
 	{
 		this.game = game;
 
-		batch = new SpriteBatch();
 		viewport = new ExtendViewport(1080, 1920, new OrthographicCamera());
 		viewport.apply(true);
+		batch = new SpriteBatch();
 
 		currentGame = new Game(cols, diff);
 		sr = new ShapeRenderer();
@@ -84,8 +84,8 @@ public class GameScreen implements Screen
 	{
 		Gdx.gl.glClearColor(0.10f, 0.14f, 0.49f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 		viewport.getCamera().update();
+
 		sr.setProjectionMatrix(viewport.getCamera().combined);
 		sr.begin(ShapeRenderer.ShapeType.Filled);
 
@@ -105,6 +105,8 @@ public class GameScreen implements Screen
 		}
 
 		sr.end();
+
+		batch.setProjectionMatrix(viewport.getCamera().combined);
 		batch.begin();
 
 		// Columns
