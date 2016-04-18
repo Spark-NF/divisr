@@ -3,7 +3,6 @@ package fr.fbb.divisr.screens.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,25 +10,18 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import fr.fbb.divisr.Divisr;
 import fr.fbb.divisr.objects.Bullet;
 import fr.fbb.divisr.objects.Column;
 import fr.fbb.divisr.objects.Game;
 import fr.fbb.divisr.objects.Number;
-import fr.fbb.divisr.screens.Screen;
+import fr.fbb.divisr.screens.MenuScreen;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameScreen implements Screen
+public class GameScreen extends MenuScreen
 {
-	private final Divisr game;
-
-	private SpriteBatch batch;
-	private Viewport viewport;
-
 	private List<Column> columns;
 	private long lastSpawn;
 	private boolean running = true;
@@ -39,16 +31,33 @@ public class GameScreen implements Screen
 	private BitmapFont numbersFont;
 	private BitmapFont scoreFont;
 	private ShapeRenderer sr;
+	private SpriteBatch batch;
 
 	public GameScreen(final Divisr game, int cols, Game.Difficulty diff)
 	{
-		this.game = game;
-
-		viewport = new ExtendViewport(1080, 1920, new OrthographicCamera());
-		viewport.apply(true);
-		batch = new SpriteBatch();
+		super(game);
 
 		currentGame = new Game(cols, diff);
+		batch = new SpriteBatch();
+
+		// Columns
+		columns = new ArrayList<Column>();
+		for (int i = 0; i < cols; ++i)
+		{
+			Column col = new Column(200, currentGame);
+			col.position.x = i * getViewport().getWorldWidth() / cols;
+			col.position.y = 315;
+			col.position.width = getViewport().getWorldWidth() / cols;
+			col.position.height = getViewport().getWorldHeight() - col.position.y;
+			columns.add(col);
+		}
+
+		spawnNumber();
+	}
+
+	@Override
+	public void buildStage()
+	{
 		sr = new ShapeRenderer();
 
 		// Fonts
@@ -58,42 +67,29 @@ public class GameScreen implements Screen
 		// Textures
 		lifeOn = new Texture(Gdx.files.internal("life-on.png"));
 		lifeOff = new Texture(Gdx.files.internal("life-off.png"));
-
-		// Columns
-		columns = new ArrayList<Column>();
-		for (int i = 0; i < cols; ++i)
-		{
-			Column col = new Column(200, currentGame);
-			col.position.x = i * viewport.getWorldWidth() / cols;
-			col.position.y = 315;
-			col.position.width = viewport.getWorldWidth() / cols;
-			col.position.height = viewport.getWorldHeight() - col.position.y;
-			columns.add(col);
-		}
-
-		spawnNumber();
 	}
 
 	@Override
 	public void show()
 	{
+		getViewport().apply(true);
+
+		Gdx.gl.glClearColor(0.10f, 0.14f, 0.49f, 1f);
 	}
 
 	@Override
 	public void draw()
 	{
-		Gdx.gl.glClearColor(0.10f, 0.14f, 0.49f, 1f);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		viewport.getCamera().update();
+		super.draw();
 
-		sr.setProjectionMatrix(viewport.getCamera().combined);
+		sr.setProjectionMatrix(getViewport().getCamera().combined);
 		sr.begin(ShapeRenderer.ShapeType.Filled);
 
 		// Background
 		sr.setColor(new Color(0x283593FF));
-		sr.rect(0, 0, viewport.getWorldWidth(), 300);
+		sr.rect(0, 0, getViewport().getWorldWidth(), 300);
 		sr.setColor(new Color(0x181F58FF));
-		sr.rect(0, 300, viewport.getWorldWidth(), 10);
+		sr.rect(0, 300, getViewport().getWorldWidth(), 10);
 
 		// Lanes
 		for (Column col : columns)
@@ -106,7 +102,7 @@ public class GameScreen implements Screen
 
 		sr.end();
 
-		batch.setProjectionMatrix(viewport.getCamera().combined);
+		batch.setProjectionMatrix(getViewport().getCamera().combined);
 		batch.begin();
 
 		// Columns
@@ -121,7 +117,7 @@ public class GameScreen implements Screen
 		{
 			if (i == 0)
 			{
-				numbersFont.draw(batch, Integer.toString(value), viewport.getWorldWidth() / 2 - 20, 180);
+				numbersFont.draw(batch, Integer.toString(value), getViewport().getWorldWidth() / 2 - 20, 180);
 			}
 			else
 			{
@@ -131,8 +127,8 @@ public class GameScreen implements Screen
 		}
 
 		// Lives
-		int lifeSpacing = (int)(viewport.getWorldWidth() * 0.015);
-		int center = (int)(viewport.getWorldWidth() * 0.815);
+		int lifeSpacing = (int)(getViewport().getWorldWidth() * 0.015);
+		int center = (int)(getViewport().getWorldWidth() * 0.815);
 		int size = currentGame.livesMax * lifeOn.getWidth() + (currentGame.livesMax - 1) * lifeSpacing;
 		int leftBound = center - size / 2;
 		for (int life = 0; life < currentGame.livesMax; ++life)
@@ -143,8 +139,8 @@ public class GameScreen implements Screen
 		}
 
 		// Score
-		scoreFont.draw(batch, "score", viewport.getWorldWidth() - 350, 120);
-		scoreFont.draw(batch, Integer.toString(currentGame.score), viewport.getWorldWidth() - 100, 120);
+		scoreFont.draw(batch, "score", getViewport().getWorldWidth() - 350, 120);
+		scoreFont.draw(batch, Integer.toString(currentGame.score), getViewport().getWorldWidth() - 100, 120);
 
 		batch.end();
 	}
@@ -160,7 +156,7 @@ public class GameScreen implements Screen
 		{
 			Vector3 touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			viewport.getCamera().unproject(touchPos);
+			getViewport().getCamera().unproject(touchPos);
 
 			// Pause button
 			if (touchPos.x < 200 && touchPos.y < 200)
@@ -171,7 +167,7 @@ public class GameScreen implements Screen
 
 			// New bullet
 			int value = currentGame.popValue();
-			int index = (int)(touchPos.x / (viewport.getWorldWidth() / columns.size()));
+			int index = (int)(touchPos.x / (getViewport().getWorldWidth() / columns.size()));
 			columns.get(index).addBullet(new Bullet(value, numbersFont));
 		}
 
@@ -227,7 +223,7 @@ public class GameScreen implements Screen
 	@Override
 	public void resize(int width, int height)
 	{
-		viewport.update(width, height);
+		getViewport().update(width, height);
 	}
 
 	@Override
