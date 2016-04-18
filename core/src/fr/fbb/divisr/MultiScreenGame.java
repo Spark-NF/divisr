@@ -50,7 +50,11 @@ public abstract class MultiScreenGame implements ApplicationListener
 		for (Screen screen : screens)
 		{
 			screen.draw();
+
+			/*if (!screen.isOverlay())
+				return;*/
 		}
+
 		screens.peek().update(Gdx.graphics.getDeltaTime());
 	}
 

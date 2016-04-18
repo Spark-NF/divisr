@@ -6,13 +6,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import fr.fbb.divisr.Divisr;
 import fr.fbb.divisr.objects.Game;
-import fr.fbb.divisr.screens.MainMenuScreen;
+import fr.fbb.divisr.screens.menu.MainMenuScreen;
 import fr.fbb.divisr.screens.MenuScreen;
 
 public class GameOverScreen extends MenuScreen
@@ -50,25 +50,22 @@ public class GameOverScreen extends MenuScreen
 		addActor(btnExit);
 
 		// Listeners
-		btnResume.addListener(new InputListener() {
+		btnResume.addListener(new ClickListener() {
 			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			public void clicked(InputEvent event, float x, float y) {
 				game.setScreen(new GameScreen(game, lostGame.columns, lostGame.difficulty));
-				return false;
 			}
 		});
-		btnMainMenu.addListener(new InputListener() {
+		btnMainMenu.addListener(new ClickListener() {
 			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			public void clicked(InputEvent event, float x, float y) {
 				game.setScreen(new MainMenuScreen(game));
-				return false;
 			}
 		});
-		btnExit.addListener(new InputListener() {
+		btnExit.addListener(new ClickListener() {
 			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			public void clicked(InputEvent event, float x, float y) {
 				Gdx.app.exit();
-				return false;
 			}
 		});
 	}

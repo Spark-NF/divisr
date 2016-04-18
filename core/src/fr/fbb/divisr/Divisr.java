@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import fr.fbb.divisr.screens.MainMenuScreen;
+import fr.fbb.divisr.screens.menu.MainMenuScreen;
 
 public class Divisr extends MultiScreenGame
 {

@@ -1,14 +1,14 @@
-package fr.fbb.divisr.screens;
+package fr.fbb.divisr.screens.menu;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import fr.fbb.divisr.Divisr;
 import fr.fbb.divisr.objects.Game;
+import fr.fbb.divisr.screens.MenuScreen;
 import fr.fbb.divisr.screens.game.GameScreen;
 
 public class LevelMenuScreen extends MenuScreen
@@ -47,32 +47,28 @@ public class LevelMenuScreen extends MenuScreen
 		addActor(btnBack);
 
 		// Listeners
-		btnEasy.addListener(new InputListener() {
+		btnEasy.addListener(new ClickListener() {
 			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			public void clicked(InputEvent event, float x, float y) {
 				game.setScreen(new GameScreen(game, 3, Game.Difficulty.Easy));
-				return false;
 			}
 		});
-		btnMedium.addListener(new InputListener() {
+		btnMedium.addListener(new ClickListener() {
 			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			public void clicked(InputEvent event, float x, float y) {
 				game.setScreen(new GameScreen(game, 4, Game.Difficulty.Medium));
-				return false;
 			}
 		});
-		btnHard.addListener(new InputListener() {
+		btnHard.addListener(new ClickListener() {
 			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			public void clicked(InputEvent event, float x, float y) {
 				game.setScreen(new GameScreen(game, 5, Game.Difficulty.Hard));
-				return false;
 			}
 		});
-		btnBack.addListener(new InputListener() {
+		btnBack.addListener(new ClickListener() {
 			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				game.setScreen(new MainMenuScreen(game));
-				return false;
+			public void clicked(InputEvent event, float x, float y) {
+				game.popScreen();
 			}
 		});
 	}

@@ -62,6 +62,7 @@ public abstract class MenuScreen extends Stage implements Screen
 	public void resume()
 	{ }
 
+	@Override
 	public boolean isOverlay()
 	{
 		return false;
