@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.fbb.divisr.Divisr;
@@ -14,29 +13,29 @@ import fr.fbb.divisr.objects.Bullet;
 import fr.fbb.divisr.objects.Column;
 import fr.fbb.divisr.objects.Game;
 import fr.fbb.divisr.objects.Number;
-import fr.fbb.divisr.screens.MenuScreen;
+import fr.fbb.divisr.screens.StageScreen;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class GameScreen extends MenuScreen
+public class GameScreen extends StageScreen
 {
 	private long lastSpawn;
 	private boolean running = true;
 	private Texture lifeOn;
 	private Texture lifeOff;
-	private Game currentGame;
+	private Game game;
 	private BitmapFont numbersFont;
 	private BitmapFont scoreFont;
 	private ShapeRenderer sr;
 	private SpriteBatch batch;
 
-	public GameScreen(final Divisr game, Game currentGame)
+	public GameScreen(final Divisr divisr, Game game)
 	{
-		super(game);
+		super(divisr);
 
 		batch = new SpriteBatch();
-		this.currentGame = currentGame;
+		this.game = game;
+		addActor(game);
 	}
 
 	@Override
@@ -45,28 +44,33 @@ public class GameScreen extends MenuScreen
 		sr = new ShapeRenderer();
 
 		// Fonts
-		numbersFont = game.assetManager.get("fonts/numbers.ttf", BitmapFont.class);
-		scoreFont = game.assetManager.get("fonts/score.ttf", BitmapFont.class);
+		numbersFont = divisr.assetManager.get("fonts/numbers.ttf", BitmapFont.class);
+		scoreFont = divisr.assetManager.get("fonts/score.ttf", BitmapFont.class);
+
+		// Game
+		game.viewport = getViewport();
+		game.numbersFont = numbersFont;
+		game.scoreFont = scoreFont;
 
 		// Textures
 		lifeOn = new Texture(Gdx.files.internal("life-on.png"));
 		lifeOff = new Texture(Gdx.files.internal("life-off.png"));
 
-		// Game
-		ArrayList<Column> columns = new ArrayList<Column>();
-		final int columnNum = currentGame.columnNum;
-		for (int i = 0; i < columnNum; ++i)
+		// Create columns
+		final int columnNum = game.columnNum;
+		final Column[] columns = new Column[columnNum];
+		for (int i = 0; i < columnNum; i++)
 		{
-			Column col = new Column(200, currentGame);
-			col.position.x = i * getViewport().getWorldWidth() / columnNum;
-			col.position.y = 315;
-			col.position.width = getViewport().getWorldWidth() / columnNum;
-			col.position.height = getViewport().getWorldHeight() - col.position.y;
-			columns.add(col);
+			Column col = new Column(200, getViewport());
+			col.setPosition(i * getViewport().getWorldWidth() / columnNum, 315);
+			col.setWidth(getViewport().getWorldWidth() / columnNum);
+			col.setHeight(getViewport().getWorldHeight() - col.getY());
+			columns[i] = col;
+			game.addActor(col);
 		}
-		currentGame.columns = columns;
+		game.columns = columns;
 
-		spawnNumber();
+		//spawnNumber();
 	}
 
 	@Override
@@ -76,74 +80,6 @@ public class GameScreen extends MenuScreen
 		getViewport().apply(true);
 
 		Gdx.gl.glClearColor(0.10f, 0.14f, 0.49f, 1f);
-	}
-
-	@Override
-	public void draw()
-	{
-		super.draw();
-
-		sr.setProjectionMatrix(getViewport().getCamera().combined);
-		sr.begin(ShapeRenderer.ShapeType.Filled);
-
-		// Background
-		sr.setColor(new Color(0x283593FF));
-		sr.rect(0, 0, getViewport().getWorldWidth(), 300);
-		sr.setColor(new Color(0x181F58FF));
-		sr.rect(0, 300, getViewport().getWorldWidth(), 10);
-
-		// Lanes
-		for (Column col : currentGame.columns)
-		{
-			sr.setColor(new Color(0x2B3997FF));
-			sr.rect(col.position.x + 10, col.position.y, col.position.width - 20, 200);
-			sr.setColor(new Color(0x303F9FFF));
-			sr.rect(col.position.x + 10, col.position.y + 200, col.position.width - 20, col.position.height - 200);
-		}
-
-		sr.end();
-
-		batch.setProjectionMatrix(getViewport().getCamera().combined);
-		batch.begin();
-
-		// Columns
-		for (Column column : currentGame.columns)
-		{
-			column.draw(batch);
-		}
-
-		// Incoming values
-		int i = 0;
-		for (Integer value : currentGame.incomingValues)
-		{
-			if (i == 0)
-			{
-				numbersFont.draw(batch, Integer.toString(value), getViewport().getWorldWidth() / 2 - 20, 180);
-			}
-			else
-			{
-				numbersFont.draw(batch, Integer.toString(value), (currentGame.incomingValues.size() - i) * 120 - 60, 180);
-			}
-			++i;
-		}
-
-		// Lives
-		int lifeSpacing = (int)(getViewport().getWorldWidth() * 0.015);
-		int center = (int)(getViewport().getWorldWidth() * 0.815);
-		int size = currentGame.livesMax * lifeOn.getWidth() + (currentGame.livesMax - 1) * lifeSpacing;
-		int leftBound = center - size / 2;
-		for (int life = 0; life < currentGame.livesMax; ++life)
-		{
-			boolean on = life < currentGame.lives;
-			batch.draw(on ? lifeOn : lifeOff, leftBound, 150);
-			leftBound += lifeOn.getWidth() + lifeSpacing;
-		}
-
-		// Score
-		scoreFont.draw(batch, "score", getViewport().getWorldWidth() - 350, 120);
-		scoreFont.draw(batch, Integer.toString(currentGame.score), getViewport().getWorldWidth() - 100, 120);
-
-		batch.end();
 	}
 
 	@Override
@@ -157,7 +93,7 @@ public class GameScreen extends MenuScreen
 		{
 			Vector3 touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			getViewport().getCamera().unproject(touchPos);
+			touchPos = getViewport().getCamera().unproject(touchPos);
 
 			// Pause button
 			if (touchPos.x < 200 && touchPos.y < 200)
@@ -167,45 +103,108 @@ public class GameScreen extends MenuScreen
 			}
 
 			// New bullet
-			int value = currentGame.popValue();
-			int index = (int)(touchPos.x / (getViewport().getWorldWidth() / currentGame.columns.size()));
-			currentGame.columns.get(index).addBullet(new Bullet(value, numbersFont));
+			int index = (int)(touchPos.x / (getViewport().getWorldWidth() / game.columnNum));
+			int value = game.popValue();
+			final Bullet bullet = new Bullet(value, numbersFont);
+			game.spawnBullet(index, bullet);
 		}
 
-		// Update columnNum
-		for (Column column : currentGame.columns)
-		{
-			column.update(delta);
-		}
+		act(delta);
+	}
 
+	@Override
+	public void act(float delta)
+	{
 		// Game over on no life
-		if (currentGame.lives == 0)
+		if (game.lives == 0)
 		{
 			running = false;
-			game.addScreen(new GameOverScreen(game, currentGame));
+			divisr.addScreen(new GameOverScreen(divisr, game));
 			return;
 		}
 
 		// Spawn new numbers from time to time
 		if (TimeUtils.nanoTime() - lastSpawn > 1000000000)
 		{
-			spawnNumber();
+			final Color color = new Color(0f, 1f, 0f, 1f);
+			final Number number = new Number(game.fallingNumber(), numbersFont, color);
+			lastSpawn = TimeUtils.nanoTime();
+			game.spawnNumber(number);
 		}
+
+		super.act(delta);
 	}
 
-	private void spawnNumber()
+	@Override
+	public void draw()
 	{
-		int index = MathUtils.random(0, currentGame.columns.size() - 1);
-		currentGame.columns.get(index).addNumber(new Number(currentGame.fallingNumber(), numbersFont, new Color(0f, 1f, 0f, 1f)));
 
-		lastSpawn = TimeUtils.nanoTime();
+		sr.setProjectionMatrix(getViewport().getCamera().combined);
+		sr.begin(ShapeRenderer.ShapeType.Filled);
+
+		// Background
+		sr.setColor(new Color(0x283593FF));
+		sr.rect(0, 0, getViewport().getWorldWidth(), 300);
+		sr.setColor(new Color(0x181F58FF));
+		sr.rect(0, 300, getViewport().getWorldWidth(), 10);
+
+		// Lanes
+		for (Column col : game.columns)
+		{
+			sr.setColor(new Color(0x2B3997FF));
+			sr.rect(col.getX() + 10, col.getY(), col.getWidth() - 20, 200);
+			sr.setColor(new Color(0x303F9FFF));
+			sr.rect(col.getX() + 10, col.getY() + 200, col.getWidth() - 20, col.getHeight() - 200);
+		}
+
+		sr.end();
+
+		super.draw();
+
+		/*
+		batch.setProjectionMatrix(getViewport().getCamera().combined);
+		batch.begin();
+
+		// Incoming values
+		int i = 0;
+		for (Integer value : game.incomingValues)
+		{
+			if (i == 0)
+			{
+				numbersFont.draw(batch, Integer.toString(value), getViewport().getWorldWidth() / 2 - 20, 180);
+			}
+			else
+			{
+				numbersFont.draw(batch, Integer.toString(value), (game.incomingValues.size() - i) * 120 - 60, 180);
+			}
+			++i;
+		}
+
+		// Lives
+		int lifeSpacing = (int)(getViewport().getWorldWidth() * 0.015);
+		int center = (int)(getViewport().getWorldWidth() * 0.815);
+		int size = game.livesMax * lifeOn.getWidth() + (game.livesMax - 1) * lifeSpacing;
+		int leftBound = center - size / 2;
+		for (int life = 0; life < game.livesMax; ++life)
+		{
+			boolean on = life < game.lives;
+			batch.draw(on ? lifeOn : lifeOff, leftBound, 150);
+			leftBound += lifeOn.getWidth() + lifeSpacing;
+		}
+
+		// Score
+		scoreFont.draw(batch, "score", getViewport().getWorldWidth() - 350, 120);
+		scoreFont.draw(batch, Integer.toString(game.score), getViewport().getWorldWidth() - 100, 120);
+
+		batch.end();
+		*/
 	}
 
-	private void pauseGame()
+    private void pauseGame()
 	{
 		if (running)
 		{
-			game.addScreen(new PauseScreen(game));
+			divisr.addScreen(new PauseScreen(divisr));
 		}
 	}
 
@@ -213,7 +212,7 @@ public class GameScreen extends MenuScreen
 	{
 		if (!running)
 		{
-			game.popScreen();
+			divisr.popScreen();
 		}
 	}
 

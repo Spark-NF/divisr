@@ -7,15 +7,15 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import fr.fbb.divisr.Divisr;
 
-public abstract class MenuScreen extends Stage implements Screen
+public abstract class StageScreen extends Stage implements Screen
 {
-    protected Divisr game;
+    protected Divisr divisr;
 
-    public MenuScreen(final Divisr game)
+    public StageScreen(final Divisr divisr)
     {
         super(new ExtendViewport(1080, 1920, new OrthographicCamera()));
 
-        this.game = game;
+        this.divisr = divisr;
     }
 
     public abstract void buildStage();
@@ -23,10 +23,13 @@ public abstract class MenuScreen extends Stage implements Screen
     @Override
     public void draw()
     {
+        // FIXME: clear hides lane background.
+        /*
         if (!isOverlay())
         {
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         }
+        */
 
         super.draw();
     }

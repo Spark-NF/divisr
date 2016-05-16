@@ -8,9 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import fr.fbb.divisr.Divisr;
-import fr.fbb.divisr.screens.MenuScreen;
+import fr.fbb.divisr.screens.StageScreen;
 
-public class MainMenuScreen extends MenuScreen
+public class MainMenuScreen extends StageScreen
 {
 	public MainMenuScreen(Divisr game)
 	{
@@ -21,8 +21,8 @@ public class MainMenuScreen extends MenuScreen
 	public void buildStage()
 	{
 		// Skin
-		Skin skin = game.assetManager.get("skin/uiskin.json", Skin.class);
-		skin.get(TextButton.TextButtonStyle.class).font = game.assetManager.get("fonts/buttons.ttf", BitmapFont.class);
+		Skin skin = divisr.assetManager.get("skin/uiskin.json", Skin.class);
+		skin.get(TextButton.TextButtonStyle.class).font = divisr.assetManager.get("fonts/buttons.ttf", BitmapFont.class);
 
 		// Buttons
 		TextButton btnPlay = new TextButton("Play", skin);
@@ -39,7 +39,7 @@ public class MainMenuScreen extends MenuScreen
 		btnPlay.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				game.addScreen(new LevelMenuScreen(game));
+				divisr.addScreen(new LevelMenuScreen(divisr));
 			}
 		});
 		btnExit.addListener(new ClickListener() {

@@ -1,19 +1,17 @@
 package fr.fbb.divisr.screens.menu;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import fr.fbb.divisr.Divisr;
 import fr.fbb.divisr.objects.Game;
-import fr.fbb.divisr.screens.MenuScreen;
+import fr.fbb.divisr.screens.StageScreen;
 import fr.fbb.divisr.screens.game.GameScreen;
 
-public class LevelMenuScreen extends MenuScreen
+public class LevelMenuScreen extends StageScreen
 {
 	public LevelMenuScreen(Divisr game)
 	{
@@ -24,8 +22,8 @@ public class LevelMenuScreen extends MenuScreen
 	public void buildStage()
 	{
 		// Skin
-		Skin skin = game.assetManager.get("skin/uiskin.json", Skin.class);
-		skin.get(TextButton.TextButtonStyle.class).font = game.assetManager.get("fonts/buttons.ttf", BitmapFont.class);
+		Skin skin = divisr.assetManager.get("skin/uiskin.json", Skin.class);
+		skin.get(TextButton.TextButtonStyle.class).font = divisr.assetManager.get("fonts/buttons.ttf", BitmapFont.class);
 
 		// Buttons
 		TextButton btnEasy = new TextButton("Easy", skin);
@@ -52,28 +50,28 @@ public class LevelMenuScreen extends MenuScreen
 		btnEasy.addListener(new ClickListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				game.setScreen(new GameScreen(game, new Game(3, Game.Difficulty.Easy)));
+				divisr.setScreen(new GameScreen(divisr, new Game(3, Game.Difficulty.Easy)));
 				return false;
 			}
 		});
 		btnMedium.addListener(new ClickListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				game.setScreen(new GameScreen(game, new Game(4, Game.Difficulty.Medium)));
+				divisr.setScreen(new GameScreen(divisr, new Game(4, Game.Difficulty.Medium)));
 				return false;
 			}
 		});
 		btnHard.addListener(new ClickListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				game.setScreen(new GameScreen(game, new Game(5, Game.Difficulty.Hard)));
+				divisr.setScreen(new GameScreen(divisr, new Game(5, Game.Difficulty.Hard)));
 				return false;
 			}
 		});
 		btnBack.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				game.popScreen();
+				divisr.popScreen();
 			}
 		});
 	}

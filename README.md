@@ -1,7 +1,7 @@
 # Divisr
 
 ## About
-Divisor game made with libGDX. 
+Divisor game made with libGDX.
 
 ## Authors
 * [Spark-NF](https://github.com/Spark-NF)

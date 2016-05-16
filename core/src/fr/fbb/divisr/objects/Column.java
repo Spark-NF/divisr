@@ -1,60 +1,69 @@
 package fr.fbb.divisr.objects;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Column extends GameObject
+public class Column extends Group
 {
-	private Queue<Number> numbers;
-	private Queue<Bullet> bullets;
-	private Game game;
-	private float velocity;
+    private Queue<Number> numbers;
+    private Queue<Bullet> bullets;
+    //private Game divisr;
+    private float velocity;
+    private final Viewport viewport;
+    private ShapeRenderer sr;
 
-	public Column(float velocity, Game game)
-	{
-		this.numbers = new LinkedList<Number>();
-		this.bullets = new LinkedList<Bullet>();
-		this.velocity = velocity;
-		this.game = game;
-	}
+    public Column(float velocity, Viewport viewport/*, Game divisr*/)
+    {
+        this.numbers = new LinkedList<Number>();
+        this.bullets = new LinkedList<Bullet>();
+        this.velocity = velocity;
+        this.viewport = viewport;
+        //this.divisr = divisr;
+        sr = new ShapeRenderer();
+    }
 
-	public void addNumber(Number number)
-	{
-		number.position.x = this.position.x + this.position.width / 2 - number.position.width / 2;
-		number.position.y = this.position.y + this.position.height;
+    public void add(Number number)
+    {
+        final float posX = this.getX() + this.getWidth() / 2;
+        final float posY = this.getY() + this.getHeight();
+        number.setPosition(posX, posY);
 
-		numbers.add(number);
-	}
+        numbers.add(number);
+        addActor(number);
+    }
 
-	public void addBullet(Bullet bullet)
-	{
-		bullet.position.x = this.position.x + this.position.width / 2 - bullet.position.width / 2;
-		bullet.position.y = this.position.y + bullet.position.height + 32;
+    public void add(Bullet bullet)
+    {
+        final float posX = this.getX() + this.getWidth() / 2;
+        final float posY = this.getY() + bullet.getHeight();
+        bullet.setPosition(posX, posY);
 
-		bullets.add(bullet);
-	}
+        bullets.add(bullet);
+        addActor(bullet);
+    }
 
-	@Override
-	public void draw(SpriteBatch sb)
-	{
-		for (Number number : numbers)
-		{
-			number.draw(sb);
-		}
-		for (Bullet bullet : bullets)
-		{
-			bullet.draw(sb);
-		}
-	}
+    public int numbersCount()
+    {
+        return numbers.size();
+    }
 
-	@Override
-	public void update(float delta)
-	{
-		// Bullet hit
+    public int bulletsCount()
+    {
+        return bullets.size();
+    }
+
+    @Override
+    public void act(float delta)
+    {
+        // Bullet hit
+        // TODO: collisions
+		/*
 		Bullet topBullet = bullets.peek();
 		Number topNumber = numbers.peek();
 		if (topNumber != null && topBullet != null && topNumber.position.overlaps(topBullet.position))
@@ -64,42 +73,46 @@ public class Column extends GameObject
 
 			if (topNumber.divisible(topBullet))
 			{
-				game.goodGuess();
+				divisr.goodGuess();
 			}
 			else
 			{
-				game.loseLife();
+				divisr.loseLife();
 			}
 		}
+		*/
 
-		// Numbers
-		Iterator<Number> it = numbers.iterator();
-		while (it.hasNext())
-		{
-			Number number = it.next();
-			number.update(delta);
+        // Remove off screen numbers
+        Iterator<Number> it = numbers.iterator();
+        while (it.hasNext())
+        {
+            Number number = it.next();
+            if (number.getY() - number.getHeight() < getY())
+            {
+                removeActor(number);
+                it.remove();
+                // TODO: check from parent
+                //divisr.loseLife();
+            }
+        }
 
-			// Remove off screen numbers
-			if (number.position.y - number.position.height < position.y)
-			{
-				it.remove();
+        // Remove off screen bullets
+        Iterator<Bullet> itB = bullets.iterator();
+        while (itB.hasNext())
+        {
+            Bullet bullet = itB.next();
+            if (bullet.getY() > getY() + getHeight())
+            {
+                removeActor(bullet);
+                itB.remove();
+            }
+        }
+        super.act(delta);
+    }
 
-				game.loseLife();
-			}
-		}
-
-		// Bullets
-		Iterator<Bullet> itB = bullets.iterator();
-		while (itB.hasNext())
-		{
-			Bullet bullet = itB.next();
-			bullet.update(delta);
-
-			// Remove off screen bullets
-			if (bullet.position.y > position.y + position.height)
-			{
-				itB.remove();
-			}
-		}
-	}
+    @Override
+    public void draw(Batch batch, float parentAlpha)
+    {
+        super.draw(batch, parentAlpha);
+    }
 }

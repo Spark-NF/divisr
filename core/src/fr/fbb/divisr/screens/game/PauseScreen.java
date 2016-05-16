@@ -12,9 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import fr.fbb.divisr.Divisr;
 import fr.fbb.divisr.screens.menu.MainMenuScreen;
-import fr.fbb.divisr.screens.MenuScreen;
+import fr.fbb.divisr.screens.StageScreen;
 
-public class PauseScreen extends MenuScreen
+public class PauseScreen extends StageScreen
 {
 	public PauseScreen(Divisr game)
 	{
@@ -25,8 +25,8 @@ public class PauseScreen extends MenuScreen
 	public void buildStage()
 	{
 		// Skin
-		Skin skin = game.assetManager.get("skin/uiskin.json", Skin.class);
-		skin.get(TextButton.TextButtonStyle.class).font = game.assetManager.get("fonts/buttons.ttf", BitmapFont.class);
+		Skin skin = divisr.assetManager.get("skin/uiskin.json", Skin.class);
+		skin.get(TextButton.TextButtonStyle.class).font = divisr.assetManager.get("fonts/buttons.ttf", BitmapFont.class);
 
 		// Buttons
 		TextButton btnResume = new TextButton("Resume", skin);
@@ -48,13 +48,13 @@ public class PauseScreen extends MenuScreen
 		btnResume.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				game.popScreen();
+				divisr.popScreen();
 			}
 		});
 		btnMainMenu.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				game.setScreen(new MainMenuScreen(game));
+				divisr.setScreen(new MainMenuScreen(divisr));
 			}
 		});
 		btnExit.addListener(new ClickListener() {

@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -14,9 +13,9 @@ import com.badlogic.gdx.utils.Align;
 import fr.fbb.divisr.Divisr;
 import fr.fbb.divisr.objects.Game;
 import fr.fbb.divisr.screens.menu.MainMenuScreen;
-import fr.fbb.divisr.screens.MenuScreen;
+import fr.fbb.divisr.screens.StageScreen;
 
-public class GameOverScreen extends MenuScreen
+public class GameOverScreen extends StageScreen
 {
 	private Game lostGame;
 
@@ -31,8 +30,8 @@ public class GameOverScreen extends MenuScreen
 	public void buildStage()
 	{
 		// Skin
-		Skin skin = game.assetManager.get("skin/uiskin.json", Skin.class);
-		skin.get(TextButton.TextButtonStyle.class).font = game.assetManager.get("fonts/buttons.ttf", BitmapFont.class);
+		Skin skin = divisr.assetManager.get("skin/uiskin.json", Skin.class);
+		skin.get(TextButton.TextButtonStyle.class).font = divisr.assetManager.get("fonts/buttons.ttf", BitmapFont.class);
 
 		// Buttons
 		TextButton btnResume = new TextButton("Try again", skin);
@@ -54,13 +53,14 @@ public class GameOverScreen extends MenuScreen
 		btnResume.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				game.setScreen(new GameScreen(game, new Game(lostGame.columnNum, lostGame.difficulty)));
+				final Game game = new Game(lostGame.columnNum, lostGame.difficulty);
+				divisr.setScreen(new GameScreen(divisr, game));
 			}
 		});
 		btnMainMenu.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				game.setScreen(new MainMenuScreen(game));
+				divisr.setScreen(new MainMenuScreen(divisr));
 			}
 		});
 		btnExit.addListener(new ClickListener() {
