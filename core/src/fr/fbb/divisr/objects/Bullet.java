@@ -37,12 +37,16 @@ public class Bullet extends Actor
 	@Override
 	public void draw(Batch batch, float parentAlpha)
 	{
-		float x = getX() - 0.5f * texture.getWidth();
-		float y = getY() - 0.5f * texture.getHeight();
+		// Background
+		float x = getX() - texture.getWidth() / 2;
+		float y = getY();
 		batch.draw(texture, x, y);
-		x = getX();
-		y = getY() + 40.0f; // font height
+
+		// Text
+		x = getParent().getWidth() / 2;
+		y = getY() + (texture.getHeight() + 90) / 2; // font height
 		font.draw(batch, Integer.toString(value), x, y, 0, Align.center, false);
+
 		super.draw(batch, parentAlpha);
 	}
 }

@@ -1,7 +1,6 @@
 package fr.fbb.divisr.objects;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -16,7 +15,6 @@ public class Column extends Group
     //private Game divisr;
     private float velocity;
     private final Viewport viewport;
-    private ShapeRenderer sr;
 
     public Column(float velocity, Viewport viewport/*, Game divisr*/)
     {
@@ -25,13 +23,13 @@ public class Column extends Group
         this.velocity = velocity;
         this.viewport = viewport;
         //this.divisr = divisr;
-        sr = new ShapeRenderer();
     }
 
     public void add(Number number)
     {
-        final float posX = this.getX() + this.getWidth() / 2;
-        final float posY = this.getY() + this.getHeight();
+	    // Falling numbers start at the center top of the column
+        final float posX = this.getWidth() / 2;
+        final float posY = this.getHeight();
         number.setPosition(posX, posY);
 
         numbers.add(number);
@@ -40,8 +38,9 @@ public class Column extends Group
 
     public void add(Bullet bullet)
     {
-        final float posX = this.getX() + this.getWidth() / 2;
-        final float posY = this.getY() + bullet.getHeight();
+        // Bullets start at the center bottom of the column
+        final float posX = this.getWidth() / 2;
+        final float posY = 0;
         bullet.setPosition(posX, posY);
 
         bullets.add(bullet);

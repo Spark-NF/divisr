@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -14,8 +13,6 @@ import fr.fbb.divisr.objects.Column;
 import fr.fbb.divisr.objects.Game;
 import fr.fbb.divisr.objects.Number;
 import fr.fbb.divisr.screens.StageScreen;
-
-import java.util.ArrayList;
 
 public class GameScreen extends StageScreen
 {
@@ -27,13 +24,11 @@ public class GameScreen extends StageScreen
 	private BitmapFont numbersFont;
 	private BitmapFont scoreFont;
 	private ShapeRenderer sr;
-	private SpriteBatch batch;
 
 	public GameScreen(final Divisr divisr, Game game)
 	{
 		super(divisr);
 
-		batch = new SpriteBatch();
 		this.game = game;
 		addActor(game);
 	}
