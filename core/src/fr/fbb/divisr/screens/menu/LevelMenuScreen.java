@@ -22,8 +22,8 @@ public class LevelMenuScreen extends StageScreen
 	public void buildStage()
 	{
 		// Skin
-		Skin skin = divisr.assetManager.get("skin/uiskin.json", Skin.class);
-		skin.get(TextButton.TextButtonStyle.class).font = divisr.assetManager.get("fonts/buttons.ttf", BitmapFont.class);
+		Skin skin = Divisr.assetManager.get("skin/uiskin.json", Skin.class);
+		skin.get(TextButton.TextButtonStyle.class).font = Divisr.assetManager.get("fonts/buttons.ttf", BitmapFont.class);
 
 		// Buttons
 		TextButton btnEasy = new TextButton("Easy", skin);
