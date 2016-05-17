@@ -1,24 +1,19 @@
 package fr.fbb.divisr.objects;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Align;
+import fr.fbb.divisr.Divisr;
 
 public class Number extends Actor
 {
 	private int value;
 	private BitmapFont font;
 	private Color color;
-	private final static Texture texture;
-
-	static
-	{
-		texture = new Texture(Gdx.files.internal("square-red.png"));
-	}
+	private final Texture texture;
 
 	public Number(int value, BitmapFont font, Color color)
 	{
@@ -26,8 +21,11 @@ public class Number extends Actor
 		this.font = font;
 		this.color = color;
 
-        this.setWidth(64);
-        this.setHeight(64);
+		// Assets
+		texture = Divisr.assetManager.get("square-red.png", Texture.class);
+
+		this.setWidth(texture.getWidth());
+		this.setHeight(texture.getHeight());
 	}
 
 	@Override

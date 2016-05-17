@@ -4,6 +4,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -15,7 +16,7 @@ import fr.fbb.divisr.screens.menu.MainMenuScreen;
 
 public class Divisr extends MultiScreenGame
 {
-	public AssetManager assetManager;
+	public static AssetManager assetManager;
 
 	public void create()
 	{
@@ -32,6 +33,12 @@ public class Divisr extends MultiScreenGame
 		// Load UI skin
 		manager.load("skin/uiskin.atlas", TextureAtlas.class);
 		manager.load("skin/uiskin.json", Skin.class, new SkinLoader.SkinParameter("skin/uiskin.atlas"));
+
+		// Textures
+		manager.load("life-on.png", Texture.class);
+		manager.load("life-off.png", Texture.class);
+		manager.load("square-red.png", Texture.class);
+		manager.load("circle-blue.png", Texture.class);
 
 		// Init free-type font loader
 		FileHandleResolver resolver = new InternalFileHandleResolver();

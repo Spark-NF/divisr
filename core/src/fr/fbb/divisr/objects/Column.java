@@ -1,6 +1,7 @@
 package fr.fbb.divisr.objects;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -61,25 +62,30 @@ public class Column extends Group
     public void act(float delta)
     {
         // Bullet hit
-        // TODO: collisions
-		/*
+	    Number topNumber = numbers.peek();
 		Bullet topBullet = bullets.peek();
-		Number topNumber = numbers.peek();
-		if (topNumber != null && topBullet != null && topNumber.position.overlaps(topBullet.position))
+		if (topNumber != null && topBullet != null)
 		{
-			bullets.remove();
-			numbers.remove();
+			Rectangle numberRectangle = new Rectangle(1, topNumber.getY(), topNumber.getWidth(), topNumber.getHeight());
+			Rectangle bulletRectangle = new Rectangle(1, topBullet.getY(), topBullet.getWidth(), topBullet.getHeight());
 
-			if (topNumber.divisible(topBullet))
+			if (numberRectangle .overlaps(bulletRectangle))
 			{
-				divisr.goodGuess();
-			}
-			else
-			{
-				divisr.loseLife();
+				bullets.remove();
+				numbers.remove();
+				removeActor(topNumber);
+				removeActor(topBullet);
+
+				/*if (topNumber.divisible(topBullet))
+				{
+					divisr.goodGuess();
+				}
+				else
+				{
+					divisr.loseLife();
+				}*/
 			}
 		}
-		*/
 
         // Remove off screen numbers
         Iterator<Number> it = numbers.iterator();

@@ -20,17 +20,19 @@ public abstract class StageScreen extends Stage implements Screen
 
     public abstract void buildStage();
 
+    public void drawBackground()
+    {
+    }
+
     @Override
     public void draw()
     {
-        // FIXME: clear hides lane background.
-        /*
-        if (!isOverlay())
-        {
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        }
-        */
+	    if (!isOverlay())
+	    {
+		    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+	    }
 
+	    drawBackground();
         super.draw();
     }
 

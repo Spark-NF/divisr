@@ -1,12 +1,12 @@
 package fr.fbb.divisr.objects;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import fr.fbb.divisr.Divisr;
 
 import java.util.LinkedList;
 
@@ -30,24 +30,21 @@ public class Game extends Group
 	public Column[] columns;
 	private static Texture lifeOn;
 	private static Texture lifeOff;
-	public Viewport viewport;
 	public BitmapFont numbersFont;
 	public BitmapFont scoreFont;
-
-	static
-	{
-
-		// Textures
-		lifeOn = new Texture(Gdx.files.internal("life-on.png"));
-		lifeOff = new Texture(Gdx.files.internal("life-off.png"));
-
-	}
+	public Viewport viewport;
 
 	public Game(int columnNum, Difficulty difficulty)
 	{
 		this.columnNum = columnNum;
 		this.difficulty = difficulty;
 		score = 0;
+
+		// Assets
+		lifeOn = Divisr.assetManager.get("life-on.png", Texture.class);
+		lifeOff = Divisr.assetManager.get("life-off.png", Texture.class);
+		numbersFont = Divisr.assetManager.get("fonts/numbers.ttf", BitmapFont.class);
+		scoreFont = Divisr.assetManager.get("fonts/score.ttf", BitmapFont.class);
 
 		// Initial lives
 		livesMax = (difficulty == Difficulty.Easy ? 5 : (difficulty == Difficulty.Medium ? 3 : 1));

@@ -2,7 +2,6 @@ package fr.fbb.divisr.screens.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
@@ -18,11 +17,8 @@ public class GameScreen extends StageScreen
 {
 	private long lastSpawn;
 	private boolean running = true;
-	private Texture lifeOn;
-	private Texture lifeOff;
 	private Game game;
 	private BitmapFont numbersFont;
-	private BitmapFont scoreFont;
 	private ShapeRenderer sr;
 
 	public GameScreen(final Divisr divisr, Game game)
@@ -38,18 +34,11 @@ public class GameScreen extends StageScreen
 	{
 		sr = new ShapeRenderer();
 
-		// Fonts
-		numbersFont = divisr.assetManager.get("fonts/numbers.ttf", BitmapFont.class);
-		scoreFont = divisr.assetManager.get("fonts/score.ttf", BitmapFont.class);
-
 		// Game
 		game.viewport = getViewport();
-		game.numbersFont = numbersFont;
-		game.scoreFont = scoreFont;
 
-		// Textures
-		lifeOn = new Texture(Gdx.files.internal("life-on.png"));
-		lifeOff = new Texture(Gdx.files.internal("life-off.png"));
+		// Assets
+		numbersFont = Divisr.assetManager.get("fonts/numbers.ttf", BitmapFont.class);
 
 		// Create columns
 		final int columnNum = game.columnNum;
@@ -131,9 +120,8 @@ public class GameScreen extends StageScreen
 	}
 
 	@Override
-	public void draw()
+	public void drawBackground()
 	{
-
 		sr.setProjectionMatrix(getViewport().getCamera().combined);
 		sr.begin(ShapeRenderer.ShapeType.Filled);
 
@@ -153,46 +141,6 @@ public class GameScreen extends StageScreen
 		}
 
 		sr.end();
-
-		super.draw();
-
-		/*
-		batch.setProjectionMatrix(getViewport().getCamera().combined);
-		batch.begin();
-
-		// Incoming values
-		int i = 0;
-		for (Integer value : game.incomingValues)
-		{
-			if (i == 0)
-			{
-				numbersFont.draw(batch, Integer.toString(value), getViewport().getWorldWidth() / 2 - 20, 180);
-			}
-			else
-			{
-				numbersFont.draw(batch, Integer.toString(value), (game.incomingValues.size() - i) * 120 - 60, 180);
-			}
-			++i;
-		}
-
-		// Lives
-		int lifeSpacing = (int)(getViewport().getWorldWidth() * 0.015);
-		int center = (int)(getViewport().getWorldWidth() * 0.815);
-		int size = game.livesMax * lifeOn.getWidth() + (game.livesMax - 1) * lifeSpacing;
-		int leftBound = center - size / 2;
-		for (int life = 0; life < game.livesMax; ++life)
-		{
-			boolean on = life < game.lives;
-			batch.draw(on ? lifeOn : lifeOff, leftBound, 150);
-			leftBound += lifeOn.getWidth() + lifeSpacing;
-		}
-
-		// Score
-		scoreFont.draw(batch, "score", getViewport().getWorldWidth() - 350, 120);
-		scoreFont.draw(batch, Integer.toString(game.score), getViewport().getWorldWidth() - 100, 120);
-
-		batch.end();
-		*/
 	}
 
     private void pauseGame()
