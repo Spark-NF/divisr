@@ -58,15 +58,6 @@ public class GameScreen extends StageScreen
 	}
 
 	@Override
-	public void show()
-	{
-		super.show();
-		getViewport().apply(true);
-
-		Gdx.gl.glClearColor(0.10f, 0.14f, 0.49f, 1f);
-	}
-
-	@Override
 	public void update(float delta)
 	{
 		if (!running)
@@ -94,6 +85,15 @@ public class GameScreen extends StageScreen
 		}
 
 		act(delta);
+	}
+
+	@Override
+	public void show()
+	{
+		super.show();
+		getViewport().apply(true);
+
+		Gdx.gl.glClearColor(0.10f, 0.14f, 0.49f, 1f);
 	}
 
 	@Override
