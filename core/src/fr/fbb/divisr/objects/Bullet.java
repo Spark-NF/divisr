@@ -28,7 +28,7 @@ public class Bullet extends Actor
 	@Override
 	public void act(float delta)
 	{
-		setY(getY() + 200 * delta);
+		setY(getY() + 400 * delta);
 		super.act(delta);
 	}
 

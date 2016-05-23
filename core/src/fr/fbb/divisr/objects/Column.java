@@ -92,7 +92,7 @@ public class Column extends Group
         while (it.hasNext())
         {
             Number number = it.next();
-            if (number.getY() - number.getHeight() < getY())
+            if (number.getY() + number.getHeight() < getY())
             {
                 removeActor(number);
                 it.remove();
