@@ -108,7 +108,8 @@ public class GameScreen extends StageScreen
 		}
 
 		// Spawn new numbers from time to time
-		if (TimeUtils.nanoTime() - lastSpawn > 1000000000)
+		final float secPassed = (TimeUtils.nanoTime() - lastSpawn) / 1000000000.0f;
+		if (secPassed > 2.0f)
 		{
 			final Color color = new Color(0f, 1f, 0f, 1f);
 			final Number number = new Number(game.fallingNumber(), numbersFont, color);

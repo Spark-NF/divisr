@@ -4,11 +4,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Align;
 import fr.fbb.divisr.Divisr;
 
-public class Number extends Actor
+public class Number extends Obstacle
 {
 	private int value;
 	private BitmapFont font;
@@ -31,7 +30,8 @@ public class Number extends Actor
 	@Override
 	public void act(float delta)
 	{
-		setY(getY() - 200 * delta);
+		if (state != State.Dead)
+			setY(getY() - 200 * delta);
 		super.act(delta);
 	}
 
@@ -46,12 +46,21 @@ public class Number extends Actor
 		// Background
 		float x = getX() - texture.getWidth() / 2;
 		float y = getY();
+		if (state == State.Dead)
+			batch.setColor(new Color(0.2f, 0.2f, 0.2f, 1.0f));
+		else if (state == State.Sacrificed)
+			batch.setColor(new Color(0.8f, 0.8f, 0.8f, 1.0f));
+		else
+			batch.setColor(Color.WHITE);
 		batch.draw(texture, x, y);
 
 		// Text
 		x = getParent().getWidth() / 2;
 		y = getY() + (texture.getHeight() + 90) / 2; // font height
 		font.draw(batch, Integer.toString(value), x, y, 0, Align.center, false);
+
+		// Reset color.
+		batch.setColor(Color.WHITE);
 
 		super.draw(batch, parentAlpha);
 	}
