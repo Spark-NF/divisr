@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.fbb.divisr.Divisr;
@@ -77,11 +78,24 @@ public class GameScreen extends StageScreen
 				return;
 			}
 
-			// New bullet
-			int index = (int) (touchPos.x / (getViewport().getWorldWidth() / game.columnNum));
-			int value = game.popValue();
-			final Bullet bullet = new Bullet(value, numbersFont);
-			game.spawnBullet(index, bullet);
+			final float worldWidth = getViewport().getWorldWidth();
+
+			// Check touch bullet
+			Rectangle numberRect = new Rectangle(worldWidth / 2 - 60, 80, 120, 120);
+			if (numberRect.contains(touchPos.x, touchPos.y))
+			{
+				// Pop waiting value
+				// TODO: loose life if possible play.
+				game.popValue();
+			}
+			else
+			{
+				// New bullet
+				int index = (int) (touchPos.x / (worldWidth / game.columnNum));
+				int value = game.popValue();
+				final Bullet bullet = new Bullet(value, numbersFont);
+				game.spawnBullet(index, bullet);
+			}
 		}
 
 		act(delta);
@@ -140,6 +154,15 @@ public class GameScreen extends StageScreen
 			sr.setColor(new Color(0x303F9FFF));
 			sr.rect(col.getX() + 10, col.getY() + 200, col.getWidth() - 20, col.getHeight() - 200);
 		}
+
+		sr.end();
+		sr.begin(ShapeRenderer.ShapeType.Line);
+
+		// First waiting number background.
+		final float worldWidth = getViewport().getWorldWidth();
+		Rectangle numberRect = new Rectangle(worldWidth / 2 - 60, 80, 120, 120);
+		sr.setColor(new Color(0.4f, 0.4f, 0.4f, 0.6f));
+		sr.rect(numberRect.x, numberRect.y, numberRect.width, numberRect.height);
 
 		sr.end();
 	}

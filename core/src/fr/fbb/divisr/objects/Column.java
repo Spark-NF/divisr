@@ -21,6 +21,16 @@ public class Column extends Group
 		this.game = game;
 	}
 
+	public List<Number> getNumbers()
+	{
+		return numbers;
+	}
+
+	public List<Bullet> getBullets()
+	{
+		return bullets;
+	}
+
 	public void add(Number number)
 	{
 		// Falling numbers start at the center top of the column
@@ -63,10 +73,13 @@ public class Column extends Group
 		while (itN.hasNext())
 		{
 			Number number = itN.next();
-			if (number.getState() != Obstacle.State.Alive && number.timeDead > 0.8f)
+			if (number.getState() != Obstacle.State.Alive)
 			{
-				removeActor(number);
-				itN.remove();
+				if (number.timeDead > 0.8f)
+				{
+					removeActor(number);
+					itN.remove();
+				}
 			}
 			else if (number.getY() + number.getHeight() < getY())
 			{
@@ -81,10 +94,13 @@ public class Column extends Group
 		while (itB.hasNext())
 		{
 			Bullet bullet = itB.next();
-			if (bullet.getState() != Obstacle.State.Alive && bullet.timeDead > 0.8f)
+			if (bullet.getState() != Obstacle.State.Alive)
 			{
-				removeActor(bullet);
-				itB.remove();
+				if (bullet.timeDead > 0.8f)
+				{
+					removeActor(bullet);
+					itB.remove();
+				}
 			}
 			else if (bullet.getY() > getY() + getHeight())
 			{
