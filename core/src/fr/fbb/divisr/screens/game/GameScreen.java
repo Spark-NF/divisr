@@ -45,7 +45,7 @@ public class GameScreen extends StageScreen
 		final Column[] columns = new Column[columnNum];
 		for (int i = 0; i < columnNum; i++)
 		{
-			Column col = new Column(200, getViewport());
+			Column col = new Column(game);
 			col.setPosition(i * getViewport().getWorldWidth() / columnNum, 315);
 			col.setWidth(getViewport().getWorldWidth() / columnNum);
 			col.setHeight(getViewport().getWorldHeight() - col.getY());
@@ -78,7 +78,7 @@ public class GameScreen extends StageScreen
 			}
 
 			// New bullet
-			int index = (int)(touchPos.x / (getViewport().getWorldWidth() / game.columnNum));
+			int index = (int) (touchPos.x / (getViewport().getWorldWidth() / game.columnNum));
 			int value = game.popValue();
 			final Bullet bullet = new Bullet(value, numbersFont);
 			game.spawnBullet(index, bullet);
@@ -144,7 +144,7 @@ public class GameScreen extends StageScreen
 		sr.end();
 	}
 
-    private void pauseGame()
+	private void pauseGame()
 	{
 		if (running)
 		{
@@ -162,7 +162,8 @@ public class GameScreen extends StageScreen
 
 	@Override
 	public void dispose()
-	{ }
+	{
+	}
 
 	@Override
 	public void resize(int width, int height)
@@ -184,5 +185,6 @@ public class GameScreen extends StageScreen
 
 	@Override
 	public void hide()
-	{ }
+	{
+	}
 }

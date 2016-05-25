@@ -3,27 +3,22 @@ package fr.fbb.divisr.objects;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Queue;
+import java.util.List;
 
 public class Column extends Group
 {
-	private Queue<Number> numbers;
-	private Queue<Bullet> bullets;
-	//private Game divisr;
-	private float velocity;
-	private final Viewport viewport;
+	private List<Number> numbers;
+	private List<Bullet> bullets;
+	private Game game;
 
-	public Column(float velocity, Viewport viewport/*, Game divisr*/)
+	public Column(Game game)
 	{
 		this.numbers = new LinkedList<Number>();
 		this.bullets = new LinkedList<Bullet>();
-		this.velocity = velocity;
-		this.viewport = viewport;
-		//this.divisr = divisr;
+		this.game = game;
 	}
 
 	public void add(Number number)
@@ -61,35 +56,7 @@ public class Column extends Group
 	@Override
 	public void act(float delta)
 	{
-		// Bullet hit
-		Number topNumber = numbers.peek();
-		Bullet topBullet = bullets.peek();
-		if (topNumber != null && topBullet != null)
-		{
-			Rectangle numberRectangle = new Rectangle(1, topNumber.getY(), topNumber.getWidth(), topNumber.getHeight());
-			Rectangle bulletRectangle = new Rectangle(1, topBullet.getY(), topBullet.getWidth(), topBullet.getHeight());
-
-			if (numberRectangle.overlaps(bulletRectangle))
-			{
-				//bullets.remove();
-				//numbers.remove();
-				//removeActor(topNumber);
-				//removeActor(topBullet);
-
-				if (topNumber.divisible(topBullet))
-				{
-					topNumber.setState(Obstacle.State.Sacrificed);
-					topBullet.setState(Obstacle.State.Sacrificed);
-					//divisr.goodGuess();
-				}
-				else
-				{
-					topNumber.setState(Obstacle.State.Dead);
-					topBullet.setState(Obstacle.State.Dead);
-					//divisr.loseLife();
-				}
-			}
-		}
+		checkCollisions();
 
 		// Remove off screen or dead numbers
 		Iterator<Number> itN = numbers.iterator();
@@ -105,8 +72,7 @@ public class Column extends Group
 			{
 				removeActor(number);
 				itN.remove();
-				// TODO: check from parent
-				//divisr.loseLife();
+				game.loseLife();
 			}
 		}
 
@@ -124,9 +90,54 @@ public class Column extends Group
 			{
 				removeActor(bullet);
 				itB.remove();
+				game.loseLife();
 			}
 		}
 		super.act(delta);
+	}
+
+	private void checkCollisions()
+	{
+		for (Bullet bullet : bullets)
+		{
+			if (bullet.state == Obstacle.State.Alive)
+			{
+				for (Number number : numbers)
+				{
+					if (number.state == Obstacle.State.Alive)
+					{
+						checkCollisions(bullet, number);
+					}
+				}
+			}
+		}
+	}
+
+	private void checkCollisions(Bullet bullet, Number number)
+	{
+		if (number == null || bullet == null)
+		{
+			return;
+		}
+
+		Rectangle numberRectangle = new Rectangle(1, number.getY(), number.getWidth(), number.getHeight());
+		Rectangle bulletRectangle = new Rectangle(1, bullet.getY(), bullet.getWidth(), bullet.getHeight());
+
+		if (numberRectangle.overlaps(bulletRectangle))
+		{
+			if (number.divisible(bullet))
+			{
+				number.setState(Obstacle.State.Sacrificed);
+				bullet.setState(Obstacle.State.Sacrificed);
+				game.goodGuess();
+			}
+			else
+			{
+				number.setState(Obstacle.State.Dead);
+				bullet.setState(Obstacle.State.Dead);
+				game.loseLife();
+			}
+		}
 	}
 
 	@Override
