@@ -110,7 +110,7 @@ public class Game extends Group
 	public int fallingNumber()
 	{
 		int next;
-		int see = 1; //incomingValues.size();
+		int see = 2; //incomingValues.size();
 
 		// Total random
 		if (numbersCount() >= bulletsCount() /*|| (fallingNumbers.size() != 0 && MathUtils.random(1, see) <= fallingNumbers.size())*/)

@@ -36,15 +36,19 @@ public class MainMenuScreen extends StageScreen
 		addActor(btnExit);
 
 		// Listeners
-		btnPlay.addListener(new ClickListener() {
+		btnPlay.addListener(new ClickListener()
+		{
 			@Override
-			public void clicked(InputEvent event, float x, float y) {
+			public void clicked(InputEvent event, float x, float y)
+			{
 				divisr.addScreen(new LevelMenuScreen(divisr));
 			}
 		});
-		btnExit.addListener(new ClickListener() {
+		btnExit.addListener(new ClickListener()
+		{
 			@Override
-			public void clicked(InputEvent event, float x, float y) {
+			public void clicked(InputEvent event, float x, float y)
+			{
 				Gdx.app.exit();
 			}
 		});

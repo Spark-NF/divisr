@@ -54,8 +54,6 @@ public class GameScreen extends StageScreen
 			game.addActor(col);
 		}
 		game.columns = columns;
-
-		//spawnNumber();
 	}
 
 	@Override

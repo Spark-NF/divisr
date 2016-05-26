@@ -47,30 +47,35 @@ public class LevelMenuScreen extends StageScreen
 		addActor(btnBack);
 
 		// Listeners
-		btnEasy.addListener(new ClickListener() {
+		btnEasy.addListener(new ClickListener()
+		{
 			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			public void clicked(InputEvent event, float x, float y)
+			{
 				divisr.setScreen(new GameScreen(divisr, new Game(3, Game.Difficulty.Easy)));
-				return false;
 			}
 		});
-		btnMedium.addListener(new ClickListener() {
+		btnMedium.addListener(new ClickListener()
+		{
 			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			public void clicked(InputEvent event, float x, float y)
+			{
 				divisr.setScreen(new GameScreen(divisr, new Game(4, Game.Difficulty.Medium)));
-				return false;
 			}
 		});
-		btnHard.addListener(new ClickListener() {
+		btnHard.addListener(new ClickListener()
+		{
 			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			public void clicked(InputEvent event, float x, float y)
+			{
 				divisr.setScreen(new GameScreen(divisr, new Game(5, Game.Difficulty.Hard)));
-				return false;
 			}
 		});
-		btnBack.addListener(new ClickListener() {
+		btnBack.addListener(new ClickListener()
+		{
 			@Override
-			public void clicked(InputEvent event, float x, float y) {
+			public void clicked(InputEvent event, float x, float y)
+			{
 				divisr.popScreen();
 			}
 		});
