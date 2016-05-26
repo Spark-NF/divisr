@@ -84,8 +84,21 @@ public class GameScreen extends StageScreen
 			Rectangle numberRect = new Rectangle(worldWidth / 2 - 60, 80, 120, 120);
 			if (numberRect.contains(touchPos.x, touchPos.y))
 			{
+				// Loose life for each possible lane.
+				final Integer incoming = game.incomingValues.getFirst();
+				for (Column column : game.columns)
+				{
+					if (column.getNumbers().isEmpty())
+						continue;
+					final Number number = column.getNumbers().get(0);
+					if (number.divisible(incoming))
+					{
+						game.loseLife();
+						// TODO: target number indicator (red glow?)
+					}
+				}
+
 				// Pop waiting value
-				// TODO: loose life if possible play.
 				game.popValue();
 			}
 			else
@@ -123,7 +136,8 @@ public class GameScreen extends StageScreen
 
 		// Spawn new numbers from time to time
 		final float secPassed = (TimeUtils.nanoTime() - lastSpawn) / 1000000000.0f;
-		if (secPassed > 2.0f)
+		// TODO: increase difficulty
+		if (secPassed > 3.0f)
 		{
 			final Color color = new Color(0f, 1f, 0f, 1f);
 			final Number number = new Number(game.fallingNumber(), numbersFont, color);

@@ -37,7 +37,12 @@ public class Number extends Obstacle
 
 	public boolean divisible(Bullet bullet)
 	{
-		return value % bullet.value == 0;
+		return divisible(bullet.value);
+	}
+
+	public boolean divisible(int value)
+	{
+		return this.value % value == 0;
 	}
 
 	@Override
